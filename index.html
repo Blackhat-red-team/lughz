@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لغز الحروف المفقودة</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f1e8;--card:#fff;--tx:#1d1b16;--ac:#b3261e;--ok:#1b7f3b;--mu:#6b665a;--bd:#d8d1bf}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15130f;--card:#201d17;--tx:#f2ede0;--ac:#ff6b5e;--ok:#4cc27a;--mu:#a59f8e;--bd:#3a352a}}
+:root[data-theme="dark"]{--bg:#15130f;--card:#201d17;--tx:#f2ede0;--ac:#ff6b5e;--ok:#4cc27a;--mu:#a59f8e;--bd:#3a352a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;line-height:1.8}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:.2em 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:12px 0}
+.story{color:var(--mu);font-size:.95rem}
+.note{background:rgba(179,38,30,.08);border-right:4px solid var(--ac);padding:8px 12px;border-radius:8px;margin:10px 0}
+button{font:inherit;cursor:pointer}
+.go{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:10px 22px;font-weight:700}
+.opt{display:block;width:100%;text-align:right;background:var(--card);color:var(--tx);border:1.5px solid var(--bd);border-radius:10px;padding:10px 14px;margin:8px 0;font-size:1.1rem}
+.opt:hover{border-color:var(--ac)}
+.opt.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt.no{background:var(--ac);color:#fff;border-color:var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.time{font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+.time.low{color:var(--ac)}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.locks{letter-spacing:3px;font-size:1.05rem;margin-top:6px}
+.q{font-size:1.15rem;font-weight:700}
+.sub{color:var(--mu);font-size:.9rem}
+.exp{margin-top:8px;font-size:.95rem;color:var(--mu)}
+.clue{margin-top:8px;font-weight:700}
+.big{font-size:3rem;text-align:center}
+.hide{display:none}
+u{text-decoration-thickness:2px}
+</style>
+</head>
+<body>
+<main>
+<h1>🔎 لغز الحروف المفقودة</h1>
+<div class="sub">قضية اختطاف الدكتور</div>
+
+<section id="intro">
+  <div class="card story">في ليلة غامضة داخل الجامعة، اختفى أستاذ اللغة العربية من مكتبه في ظروف غامضة. عند وصول الشرطة لم يجدوا أي أثر للعنف، بل مكتباً مقلوباً ورسالة غامضة تركها الخاطف على السبورة:
+  <div class="note">«إن أردتم رؤية أستاذكم حياً، فعليكم بتتبع خطاي! حياته تعتمد على مدى إدراككم للفرق بين الأصلي والزائد.. من يخطئ في القاعدة يفقد أثره إلى الأبد!»</div>
+  تدخل المكتب بصفتك المحقق، وتجمع المذكرات والأوراق المتروكة، فتكتشف أن الخاطف يلعب لعبة ذكاء: وضع أقفالاً وشفرات على الأبواب والخزائن لا تنفتح إلا بفك الألغاز النحوية الخاصة بـ<b>حروف الجر الأصلية والزائدة</b>. تبدأ رحلة البحث بين أروقة الجامعة والمباني المهجورة، وكل لغز تحله يقودك إلى خيط جديد يكشف مكان الدكتور المحتجز قبل أن ينتهي الوقت وتضيع آثاره تماماً!</div>
+  <div class="card">
+    <b>📜 قوانين اللعبة</b>
+    <ol>
+      <li><b>الهدف:</b> حل جميع الألغاز النحوية المتعلقة بحروف الجر (الأصلية والزائدة) للوصول إلى الدكتور المحتجز وإنقاذه.</li>
+      <li><b>الوقت:</b> يمتلك المحقق عدّاد وقت (<b id="tmax"></b> ثانية) للوصول إلى المحتجز.</li>
+      <li><b>الإجابة الصحيحة:</b> تمنح المحقق تقدماً فورياً ونقاطاً إضافية (+10).</li>
+      <li><b>الإجابة الخاطئة:</b> تُنقص من الوقت المتاح <b>10 ثوانٍ</b>.</li>
+      <li><b>الفوز:</b> حل كافة الألغاز وفك قفل المكان المحتجز فيه الدكتور قبل انتهاء العدّاد.</li>
+      <li><b>الخسارة:</b> انتهاء الوقت قبل حل الشفرات، فيهرب الخاطف وتفشل عملية الإنقاذ.</li>
+      <li><b>قاعدة الإجابة:</b> ميّز بين حرف الجر <b>الأصلي</b> (يؤثر في المعنى ولا يمكن حذفه) وحرف الجر <b>الزائد</b> (يأتي للتوكيد ويمكن حذفه دون اختلال أصل المعنى).</li>
+      <li><b>الانتقال:</b> لا يمكن الانتقال من مرحلة إلى أخرى إلا بعد تجاوز اللغز الحالي بنجاح.</li>
+    </ol>
+  </div>
+  <div style="text-align:center"><button class="go" onclick="start()">ابدأ التحقيق</button></div>
+</section>
+
+<section id="game" class="hide">
+  <div class="card">
+    <div class="top"><span>🔐 اللغز <b id="n">1</b> / <b id="tot"></b></span><span>⭐ <b id="sc">0</b></span><span class="time" id="t"></span></div>
+    <div class="bar" style="margin-top:8px"><i id="pb"></i></div>
+    <div class="locks" id="locks"></div>
+  </div>
+  <div class="card">
+    <div class="q" id="q"></div>
+    <div id="opts"></div>
+    <div class="exp" id="exp"></div>
+    <div class="clue" id="clue"></div>
+  </div>
+</section>
+
+<section id="end" class="hide">
+  <div class="card">
+    <div class="big" id="ei"></div>
+    <h2 id="et" style="text-align:center"></h2>
+    <p id="em" style="text-align:center"></p>
+    <div style="text-align:center"><button class="go" onclick="start()">العب مرة أخرى</button></div>
+  </div>
+</section>
+</main>
+
+<script>
+const TIME=120, PEN=10;
+// كل عنصر: [السؤال, الخيارات (الصحيح أولاً)، الشرح، الخيط]
+const Q=[
+[`أيُّ الأبيات الآتية تضمَّنَ حرفَ جرٍّ زائدًا؟`,
+ [`فإن تبكِ للبرق الذي هيَّجَ الهوى — أعنكَ وإن تصبر فلستَ <u>بصابر</u>`,`وفي الأرض منأى للكريم عن الأذى — وفيها لمن خاف القلى متعزَّلُ`,`أديمُ مطال الجوع حتى أميتَه — وأضربُ عنه الذكر صفحاً فأذهلُ`,`وما ذاك إلا بسطةً عن تفضُّلٍ — عليهم وكان الأفضلَ المتفضِّلُ`],
+ `الباء في «بصابر» زائدة دخلت على خبر «ليس» ويمكن حذفها.`,`📎 وجدتَ ورقة داخل الدرج: «الخطوة التالية في مكتبة الجامعة».`],
+[`أيُّ الجُمل الآتية تضمَّنت حرفاً يفيدُ التوكيدَ؟`,
+ [`يا غلامُ، هل عندكَ من لبنٍ تسقينا؟`,`يا أبنائي، استعينوا بالله تفلحوا.`,`حضر الموظَّفُ إلى مقرِّ عمله.`,`سافرتُ بالطائرة من قطر حتى الكويت.`],
+ `«من» زائدة للتوكيد؛ جاءت بعد الاستفهام «هل» وقبل نكرة.`,`📚 في المكتبة، مفتاح صدئ مربوط بخريطة المبنى القديم.`],
+[`أيُّ الآيات الآتية تضمَّنت حرف الجر «مِن»؟`,
+ [`﴿قال أعوذُ بالله أن أكونَ <u>مِن</u> الجاهلين﴾`,`﴿قالوا أتجعلُ فيها <u>مَن</u> يفسدُ فيها﴾`,`﴿و<u>مَن</u> يبخلْ فإنما يبخلُ عن نفسه﴾`,`﴿<u>مَن</u> ذا الذي يشفعُ عنده إلا بإذنه﴾`],
+ `في «من الجاهلين» حرف جر، أما في البقية فـ«مَن» اسم (موصول / شرط / استفهام).`,`🗺️ الخريطة تشير إلى قاعة المحاضرات المغلقة.`],
+[`أيُّ الآيات الكريمة الآتية وردَ بها حرفُ جرٍّ يفيد <u>التخصيص</u>؟`,
+ [`﴿إنَّ الشيطانَ للإنسان عدوٌّ مبين﴾`,`﴿إنَّ الله بالناس لَرءوفٌ رحيم﴾`,`﴿لَمغفرةٌ من الله ورحمةٌ خيرٌ مما يجمعون﴾`,`﴿وإنَّ منهم لَفريقاً يلوون ألسنتَهم بالكتاب﴾`],
+ `اللام في «للإنسان» تفيد التخصيص.`,`🚪 داخل القاعة، على السبورة: «اصعد إلى الطابق الثالث».`],
+[`أيُّ الآيات الآتية يفيدُ فيها حرفُ الجر (في) الظرفيةَ الزمانيةَ؟`,
+ [`﴿إنَّ لكَ في النهارِ سبحاً طويلاً﴾`,`﴿غُلبتِ الرومُ * في أدنى الأرض﴾`,`﴿وقَرنَ في بيوتكنَّ ولا تبرَّجنَ تبرُّجَ الجاهلية الأولى﴾`,`﴿ونادى نوحٌ ابنَه وكان في معزلٍ يا بُنيَّ اركبْ معنا﴾`],
+ `«في النهار» ظرفية زمانية، والبقية ظرفية مكانية.`,`🪜 في الطابق الثالث، آثار أقدام تتجه إلى المختبر.`],
+[`أيُّ الأحاديث الشريفة التالية جاء فيها حرفُ الجر <u>الباءُ</u> زائداً؟`,
+ [`"فأتني بالكفيل، قال: كفى <u>بالله</u> كفيلاً".`,`"إنَّ أحبَّ الكلام إلى الله سبحانَ الله وبحمده".`,`"إنَّ الله يرفع بهذا القرآن أقواماً ويضع به آخرين".`,`"من صلّى عليَّ صلاةً، صلّى الله عليه بها عشراً".`],
+ `الباء في «كفى بالله» زائدة؛ ولفظ الجلالة فاعل مرفوع محلاً.`,`🔬 في المختبر رسالة: «المبنى المهجور خلف الكلية».`],
+[`ما الجملةُ التي تضمَّنت حرفَ جرٍّ أصلياً مما تحته خطٌّ فيما يأتي؟`,
+ [`ليس <u>التهرُّبُ من المشكلات</u> مُنجياً <u>منها</u>.`,`لا تُهنْ <u>مِنْ أحدٍ</u> أحسنَ إليك.`,`ليستِ العقباتُ <u>بعائقةٍ</u> إذا أرادَ الإنسانُ الطموحات.`,`ما <u>مِنْ يومٍ</u> تُشرقُ شمسُه إلا وأرزاقُ العبادِ مكتوبة.`],
+ `«من» في «من المشكلات» أصلية، أما «من أحد» و«من يوم» و«بعائقة» فحروف جر زائدة.`,`🏚️ أمام المبنى المهجور بوابة حديدية عليها قفل.`],
+[`«حتى يُخلوا بلادَ العربِ أجمعَها مِن ساحلِ الرومِ <u>حتى</u> ساحلِ العجمِ» — ما المعنى الذي أفاده حرفُ الجر الذي تحته خط في البيت السابق؟`,
+ [`انتهاء الغاية المكانية.`,`الظَّرفيّة الزّمانيّة.`,`الظَّرفيّة المكانيّة.`,`انتهاء الغاية الزّمانيّة.`],
+ `«حتى ساحل العجم» تحدد نهاية المكان.`,`🔦 داخل المبنى، سلّم حجري يقود إلى القبو.`],
+[`﴿تلك الرسلُ فضَّلنا بعضَهم <u>عَلى</u> بعضٍ <u>مِنهم</u> مَن كلَّمَ اللهُ ورفعَ بعضَهم درجاتٍ﴾ — ما المعنى الذي أفاده حرفا الجر اللذان تحتهما خط في الآية السابقة؟`,
+ [`الاستعلاء، التبعيض.`,`المجاوزة، التبعيض.`,`الاستعلاء، التخصيص.`,`المجاوزة، التخصيص.`],
+ `«على» للاستعلاء، و«من» للتبعيض.`,`🕯️ في القبو، خزانة حديدية عليها حروف محفورة.`],
+[`ما الآية الكريمة التي احتوت حرفَ جرٍّ يفيد السببيّة؟`,
+ [`﴿ولهم عذابٌ أليمٌ <u>بما</u> كانوا يكذبون﴾`,`﴿واصبرْ لحكمِ ربِّك فإنَّك بأعيننا﴾`,`﴿وفضَّلَ اللهُ المجاهدين على القاعدين أجراً عظيماً﴾`,`﴿وما آتاكمُ الرسولُ فخذوه وما نهاكم عنه فانتهوا﴾`],
+ `الباء في «بما كانوا يكذبون» للسببية.`,`🧩 داخل الخزانة خريطة لغرفة مخفية.`],
+[`«ليس من ماتَ فاستراحَ <u>بميتٍ</u> — إنما الميتُ ميِّتُ الأحياء» — ما المعنى الذي أفاده حرف الجر (الباء) كما ورد في البيت السابق؟`,
+ [`التوكيد.`,`السببيّة.`,`المجاوزة.`,`الاستعلاء.`],
+ `الباء زائدة تفيد التوكيد في خبر «ليس».`,`🗝️ الباب الأخير أمامك، وقفل واحد فقط يفصلك عن الدكتور!`],
+[`قال رسولُ الله ﷺ: "الإيمانُ بِضعٌ وسبعون أو بِضعٌ وستون شعبةً، أفضلُها قولُ لا إله إلا الله، وأدناها إماطةُ الأذى <u>عن</u> الطريق، والحياءُ شعبةٌ <u>من</u> الإيمان" (صحيح مسلم) — أفادَ حرفا الجرِّ في الحديث السابقِ على الترتيب:`,
+ [`المجاوزةَ، التبعيضَ.`,`التبعيضَ، التخصيصَ.`,`المجاوزةَ، التخصيصَ.`,`الاستعلاءَ، التبعيضَ.`],
+ `«عن» للمجاوزة، و«من» للتبعيض.`,`🔓 انفتح القفل الأخير!`]
+];
+let idx,score,left,timer,order,busy;
+const $=id=>document.getElementById(id);
+$("tmax").textContent=TIME;$("tot").textContent=Q.length;
+function show(id){["intro","game","end"].forEach(s=>$(s).classList.toggle("hide",s!==id))}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function start(){idx=0;score=0;left=TIME;busy=false;order=Q.map((_,i)=>i);show("game");render();clearInterval(timer);timer=setInterval(tick,1000)}
+function tick(){left--;paint();if(left<=0)finish(false)}
+function paint(){const t=$("t");t.textContent=Math.max(left,0);t.classList.toggle("low",left<=20);$("sc").textContent=score;$("pb").style.width=(idx/Q.length*100)+"%";$("locks").textContent="🔓".repeat(idx)+"🔒".repeat(Q.length-idx)}
+function render(){
+  const q=Q[order[idx]];busy=false;
+  $("n").textContent=idx+1;$("q").innerHTML=q[0];$("exp").textContent="";$("clue").textContent="";
+  const box=$("opts");box.innerHTML="";
+  shuffle(q[1].map((t,i)=>({t,i}))).forEach(o=>{
+    const b=document.createElement("button");b.className="opt";b.innerHTML=o.t;
+    b.onclick=()=>pick(b,o.i===0,q);box.appendChild(b)});
+  paint();
+}
+function pick(b,ok,q){
+  if(busy||left<=0)return;
+  if(ok){busy=true;b.classList.add("ok");score+=10;$("exp").textContent="✅ "+q[2];$("clue").textContent=q[3];idx++;paint();
+    setTimeout(()=>{if(left<=0)return;if(idx>=Q.length)finish(true);else render()},2200)}
+  else{b.classList.add("no");b.disabled=true;left-=PEN;$("exp").textContent="❌ أخطأت! خُصمت 10 ثوانٍ، حاول مرة أخرى.";paint();if(left<=0)finish(false)}
+}
+function finish(win){
+  clearInterval(timer);busy=true;show("end");
+  $("ei").textContent=win?"🎉":"🏃";
+  $("et").textContent=win?"أنقذت الدكتور!":"هرب الخاطف!";
+  $("em").textContent=win?("فككت كل الأقفال وتبقى "+Math.max(left,0)+" ثانية. نقاطك: "+score):("انتهى الوقت قبل حل الشفرات. نقاطك: "+score);
+}
+</script>
+</body>
+</html>
